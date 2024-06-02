@@ -3,16 +3,16 @@ module.exports = (router) => {
     const alertController = require('../controllers/alert.controller');
     const agentController = require('../controllers/agent.controller');
     const userController = require('../controllers/user.controller')
-    const AuthenticateAPIKey = require('../Policy/AuthenticateAPIKey');
+    // const AuthenticateAPIKey = require('../Policy/AuthenticateAPIKey');
     const AuthenticateJWT = require('../Policy/AuthenticateJWT')
     /// đối với api có áp dụng jwt phải gửi kèm user_id
 
 
     ///////////////////////////////////rule cua agent
     //rule
-    router.get("/agent/rule/read", ruleController.get_rule_agent)            //chưa dùng tới
-    router.post("/agent/rule/write", AuthenticateAPIKey.check_apikey, ruleController.save_rule_agent);        //
-    router.get("/agent/check_apikey", AuthenticateAPIKey.check_apikey, agentController.test_api);
+    // router.get("/agent/rule/read", ruleController.get_rule_agent)            //chưa dùng tới
+    // router.post("/agent/rule/write", AuthenticateAPIKey.check_apikey, ruleController.save_rule_agent);        //
+    // router.get("/agent/check_apikey", AuthenticateAPIKey.check_apikey, agentController.test_api);
 
 
 
