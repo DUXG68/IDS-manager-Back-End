@@ -49,7 +49,9 @@ module.exports = (router) => {
     router.post("/user/viewer/change_pass", userController.update_password)         // done
     router.get("/jwt", AuthenticateJWT.auth, alertController.info)
 
-
+    router.get("/test", (req, res) => {
+        res.send("WELCOME TO THE BASIC APP WITH AN HTTPS SERVER");
+    });
     //alert
     router.post("/alert/get_all/:page", alertController.read_all)
     router.post("/alert/statis_time", alertController.statis_time)

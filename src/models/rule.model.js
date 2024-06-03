@@ -1,5 +1,9 @@
 const db = require('../common/connect.js')
 const axios = require('axios');
+const https = require('https');
+const agentAxios = new https.Agent({
+    rejectUnauthorized: false
+});
 
 const Rule = function (rule) {
     this.rule_id = rule.rule_id
@@ -12,51 +16,51 @@ var fs = require('fs');
 const { type } = require('os');
 
 /////////////////////////////////////////////////////////thuộc agents
-const filePathRead = __dirname.replace('src\\models', '') + 'local.rules';
-const filePathWrite = __dirname.replace('src\\models', '') + 'write.rules';
+// const filePathRead = __dirname.replace('src\\models', '') + 'local.rules';
+// const filePathWrite = __dirname.replace('src\\models', '') + 'write.rules';
 
-Rule.get_rule_agent = function (result) {
-    read = []
-    try {
-        const fileData = fs.readFileSync(filePathRead, 'utf8');
-        const lines = fileData.split('\n');
-        const jsonData = []
+// Rule.get_rule_agent = function (result) {
+//     read = []
+//     try {
+//         const fileData = fs.readFileSync(filePathRead, 'utf8');
+//         const lines = fileData.split('\n');
+//         const jsonData = []
 
-        for (let i = 0; i < lines.length - 1; i++) {
+//         for (let i = 0; i < lines.length - 1; i++) {
 
-            let ruleJson = {
-                id: i,
-                info: lines[i]
-            }
-            const dataObject = JSON.stringify(ruleJson);
-            jsonData.push(dataObject);
-        }
-        result(jsonData)
-    } catch (err) {
-        console.error('Error reading file:', err);
-    }
+//             let ruleJson = {
+//                 id: i,
+//                 info: lines[i]
+//             }
+//             const dataObject = JSON.stringify(ruleJson);
+//             jsonData.push(dataObject);
+//         }
+//         result(jsonData)
+//     } catch (err) {
+//         console.error('Error reading file:', err);
+//     }
 
-}
+// }
 
-Rule.save_rule_agent = async function (data, result) {
-    const infoArray = [];
-    data.forEach(item => {
-        const content_rule = item.content_rule;
-        infoArray.push(content_rule);
-    });
+// Rule.save_rule_agent = async function (data, result) {
+//     const infoArray = [];
+//     data.forEach(item => {
+//         const content_rule = item.content_rule;
+//         infoArray.push(content_rule);
+//     });
 
-    const Contents = infoArray.join('\n') + "\n";
-    await fs.writeFileSync(filePathWrite, Contents, (err) => {
-        if (err) {
-            console.error('Error writing to file:', err);
-        } else {
-            console.log('Data has been written to file successfully!');
-        }
-    });
+//     const Contents = infoArray.join('\n') + "\n";
+//     await fs.writeFileSync(filePathWrite, Contents, (err) => {
+//         if (err) {
+//             console.error('Error writing to file:', err);
+//         } else {
+//             console.log('Data has been written to file successfully!');
+//         }
+//     });
 
 
-    result({ data, status: "success" })
-}
+//     result({ data, status: "success" })
+// }
 
 
 //////////////////////////////////////////////////////////////thuộc manager
@@ -209,11 +213,11 @@ Rule.write_rule_to_agent = async function (body, result) {
                 result(err)
             } else {
                 const headers = { apikey: body.apikey };
-                const url = `http://${body.host_ip}:8889/agent/rule/write`;
+                const url = `https://${body.host_ip}:8889/agent/rule/write`;
                 const data = rule
                 async function fetchData() {
                     try {
-                        const response = await axios.post(url, data, { headers, timeout: 1000 });
+                        const response = await axios.post(url, data, { headers, timeout: 1000, httpsAgent: agentAxios });
                         result("success");
                     } catch (error) {
                         result('error call api agent');

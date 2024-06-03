@@ -21,6 +21,7 @@ const hashPassword = (pass) => { return bcrypt.hashSync(pass, salt) }
 
 const Seeder = async function () {
     var passHash = hashPassword(config.AccAdmin.password)
+    // console.log(passHash)
     try {
         await db.query("SELECT user_id, user_name, role, user_state, name, count_try FROM User Where user_name = 'admin'", function (err, user) {
             if (err) {
@@ -247,38 +248,6 @@ User.login = async function (data, result) {
                     result("Not find user")
                 } else if (user[0].user_state === "Block") {
                     result("User is Blocked")
-                } else if (!passRegex.test(data.password)) {
-                    if (user[0].count_try > config.threshold) {
-                        async function blockUser() {
-                            try {
-                                await db.query("UPDATE User SET user_state='Block' WHERE user_name=?", [data.user_name], function (err, user) {
-                                    if (err) {
-                                        result(err)
-                                    } else {
-                                        result("User is Blocked")
-                                    }
-                                })
-                            } catch (error) {
-                                result("Can not block user");
-                            }
-                        }
-                        blockUser();
-                    } else {
-                        async function upCountTry() {
-                            try {
-                                await db.query("UPDATE User SET count_try = count_try + 1 WHERE user_name=?", [data.user_name], function (err, user) {
-                                    if (err) {
-                                        result(err)
-                                    } else {
-                                        result("Password wrong")
-                                    }
-                                })
-                            } catch (error) {
-                                result('Can not up count try');
-                            }
-                        }
-                        upCountTry();
-                    }
                 } else if (!bcrypt.compareSync(data.password, user[0].password)) {// mật khẩu sai
                     if (user[0].count_try > config.threshold) {
                         async function blockUser() {

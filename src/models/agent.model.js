@@ -1,4 +1,9 @@
 const axios = require('axios');
+const https = require('https');
+const agentAxios = new https.Agent({
+    rejectUnauthorized: false
+});
+
 const config = require('../config/config.js')
 const db = require('../common/connect.js')
 
@@ -95,13 +100,15 @@ Agent.delete_agent = async function (data, result) {
 
 Agent.get_status_agent = async function (data, result) {
     const headers = { Apikey: data.apikey };
-    const url = `http://${data.host_ip}:8889/agent/check_apikey`;
-
+    const url = `https://${data.host_ip}:8889/agent/check_apikey`;
     try {
-        const res = await axios.get(url, { headers, timeout: 1000 });
+        const res = await axios.get(url, { headers, timeout: 1000, httpsAgent: agentAxios });
+        console.log(res.data)
         result(res.data.result);
+
     } catch (error) {
         result('error');
+        console.log('error')
     }
 }
 
