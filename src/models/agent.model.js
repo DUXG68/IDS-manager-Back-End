@@ -103,7 +103,6 @@ Agent.get_status_agent = async function (data, result) {
     const url = `https://${data.host_ip}:8889/agent/check_apikey`;
     try {
         const res = await axios.get(url, { headers, timeout: 1000, httpsAgent: agentAxios });
-        console.log(res.data)
         result(res.data.result);
 
     } catch (error) {

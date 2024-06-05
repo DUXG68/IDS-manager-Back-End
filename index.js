@@ -1,15 +1,16 @@
 const { Seeder } = require('./src/models/user.model')
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser')
 var cors = require('cors')
-const fs = require('fs');
-const path = require('path');
-const https = require("https");
+// const fs = require('fs');
+// const path = require('path');
+// const https = require("https");
 var config = require('./src/config/config')
 var express = require('express');
 var app = express();
-const db = require('./src/common/connect')
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser())
 app.use(cors())
 require('./src/routes/index')(app);
 

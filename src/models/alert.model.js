@@ -57,6 +57,7 @@ Alert.read_all = async function (params, data, result) {
             total: esResponse.hits.total.value,
             totalPages: Math.ceil(esResponse.hits.total.value / pageSize),
             hits: sources
+
         });
 
     } catch (error) {

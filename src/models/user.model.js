@@ -7,8 +7,10 @@ const jwt = require("jsonwebtoken");
 function jwtSignUp(user) {
     const ONE_WEEK = 60 * 60 * 24 * 7;
     const ONE_MIN = 15;
+    const ONE_DAY = 60 * 60 * 24;
+    const ONE_HOUR = 60 * 60 * 2;
     return jwt.sign(user, config.authentication.jwtSecret, {
-        expiresIn: ONE_WEEK,
+        expiresIn: ONE_HOUR,
     });
 }
 
@@ -293,7 +295,7 @@ User.login = async function (data, result) {
                                                 if (err) {
                                                     result(err)
                                                 } else {
-                                                    result({ user_id: user[0].user_id, role: user[0].role, name: user[0].name, token: jwtSignUp({ user_id: user[0].user_id, role: user[0].role, name: user[0].name }) })
+                                                    result({ user_id: user[0].user_id, role: user[0].role, name: user[0].name, token: `${jwtSignUp({ user_id: user[0].user_id, role: user[0].role, name: user[0].name })}` })
                                                 }
                                             })
 
